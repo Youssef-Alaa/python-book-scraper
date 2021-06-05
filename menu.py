@@ -7,8 +7,9 @@ logger = logging.getLogger('scraping.menu')
 
 USER_CHOICE = '''Enter one of the following
 
-- 'b' to look at best rated books
+- 'b' to look at the best rated books
 - 'c' to look at the cheapest books
+- 'bc' to look at the best cheapest books
 - 'n' to just get the next available book on the page
 - 'q' to exit
 
@@ -20,7 +21,6 @@ def print_best_books():
     best_books = sorted(books_list, key=lambda x: x.rating * -1)[:10]
     for book in best_books:
         print(book)
-
 
 def print_cheapest_books():
     logger.debug('Finding best books by price...')
@@ -36,29 +36,26 @@ def print_best_cheapest_books():
 
 books_generator = (x for x in books_list)
 
-
 def get_next_book():
     logger.debug('Getting next book from generator of all books...')
     print(next(books_generator))
 
-
 user_choices = {
     'b': print_best_books,
     'c': print_cheapest_books,
+    'bc': print_best_cheapest_books,
     'n': get_next_book
 }
-
 
 def menu():
     user_input = input(USER_CHOICE)
     while user_input != 'q':
         logger.debug('User did not choose to exit program.')
-        if user_input in ('b', 'c', 'n'):
+        if user_input in ('b', 'c', 'bc', 'n'):
             user_choices[user_input]()
         else:
             print('Please choose a valid command.')
         user_input = input(USER_CHOICE)
     logger.debug('Terminating program...')
-
 
 menu()
